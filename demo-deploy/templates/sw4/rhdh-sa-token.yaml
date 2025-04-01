@@ -4,6 +4,6 @@ metadata:
   name: rhdh-sa-token
   namespace: '{{ .Values.developerhub.namespaceName }}'
   annotations:
-    kubernetes.io/service-account.name: rhdh-operator
+    kubernetes.io/service-account.name: rhdh-controller-manager
     argocd.argoproj.io/sync-wave: "4"
 type: kubernetes.io/service-account-token
