@@ -77,7 +77,7 @@ data:
           - Template
           - Group
           - User
-        target: https://${GITLAB_HOST}/development/rhdh2vm/blob/main/catalog-entities/all.yaml
+        target: https://github.com/sgutierr/rhdhdemotemplate/blob/main/catalog-entities/all.yaml
         type: url
       providers:  
         gitlab:
