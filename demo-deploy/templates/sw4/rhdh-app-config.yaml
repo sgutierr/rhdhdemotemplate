@@ -179,4 +179,25 @@ data:
         type: local
       sanitizer:
         allowedIframeHosts:
-        - www.youtube.com
+        - www.youtube.com       
+    dynamicPlugins:
+      frontend:
+        red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+          dynamicRoutes:
+            - path: /
+              importName: DynamicHomePage
+              config:
+                props:
+                  title: Welcome to your RHDH instance!
+                  personalizedTitle: Welcome to your RHDH instance {{firstName}}!
+                  personalizedDescription: This is your RHDH instance, where you can find all the information you need to get started.
+                  subtitle: Your backstage instance is ready!                 
+                worldClocks:
+                  - label: Raleigh
+                    timeZone: EST
+                  - label: London
+                    timeZone: GMT
+                  - label: Brno
+                    timeZone: CET
+                  - label: Bangalore
+                    timeZone: IST                  
