@@ -192,12 +192,12 @@ data:
                   personalizedTitle: Welcome to your RHDH instance!
                   personalizedDescription: This is your RHDH instance, where you can find all the information you need to get started.
                   subtitle: Your backstage instance is ready!                 
-                worldClocks:
-                  - label: Raleigh
-                    timeZone: EST
-                  - label: London
-                    timeZone: GMT
-                  - label: Brno
-                    timeZone: CET
-                  - label: Bangalore
-                    timeZone: IST                  
+                  worldClocks:
+                    - label: Raleigh
+                      timeZone: EST
+                    - label: London
+                      timeZone: GMT
+                    - label: Brno
+                      timeZone: CET
+                    - label: Bangalore
+                      timeZone: IST                  
