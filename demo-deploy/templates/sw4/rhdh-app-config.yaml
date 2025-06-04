@@ -29,8 +29,7 @@ data:
             clientId: ${KEYCLOAK_CLIENTID}
             clientSecret: ${KEYCLOAK_CLIENTSECRET}
             metadataUrl: ${KEYCLOAK_URL}         
-            prompt: auto
-            dangerouslyAllowSignInWithoutUserInCatalog: true
+            prompt: auto            
     csp:
       connect-src:
       - '''self'''
@@ -170,7 +169,8 @@ data:
     quay:
       uiUrl: https://quay.io
     scaffolder: null
-    signInPage: oidc   
+    signInPage: oidc  
+    dangerouslyAllowSignInWithoutUserInCatalog: true
     techdocs:
       builder: local
       generator:
