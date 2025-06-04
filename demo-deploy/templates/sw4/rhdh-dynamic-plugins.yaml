@@ -15,8 +15,7 @@ data:
     - disabled: false
       package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     - disabled: false
-      integrity: sha512-VuH3tCeDwBgS0hrXec1F3VMFsLnYePWJwP2Wo8WyjrOY7G0CkYBLM0eyYZT4DFp/EpzepFPbztfKZ95fCJ3I1g==
-      package: '@red-hat-developer-hub/backstage-plugin-dynamic-home-page'       
+      package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page     
     - disabled: false
       package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab
     - disabled: false
