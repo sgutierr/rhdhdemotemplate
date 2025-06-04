@@ -30,7 +30,10 @@ data:
             clientSecret: ${KEYCLOAK_CLIENTSECRET}
             metadataUrl: ${KEYCLOAK_URL}         
             prompt: auto     
-            dangerouslyAllowSignInWithoutUserInCatalog: true  
+          signIn:
+            resolvers:
+              - resolver: preferredUsernameMatchingUserEntityName
+                dangerouslyAllowSignInWithoutUserInCatalog: true            
     csp:
       connect-src:
       - '''self'''
