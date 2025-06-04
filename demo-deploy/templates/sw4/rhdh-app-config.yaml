@@ -29,7 +29,8 @@ data:
             clientId: ${KEYCLOAK_CLIENTID}
             clientSecret: ${KEYCLOAK_CLIENTSECRET}
             metadataUrl: ${KEYCLOAK_URL}         
-            prompt: auto            
+            prompt: auto     
+            dangerouslyAllowSignInWithoutUserInCatalog: true  
     csp:
       connect-src:
       - '''self'''
