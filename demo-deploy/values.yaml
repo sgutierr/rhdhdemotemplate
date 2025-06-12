@@ -20,7 +20,7 @@ gitlab:
   namespaceName: gitlab-system
   operatorGroupName: gitlab-system-operator-group
   subscriptionName: gitlab-operator-kubernetes
-  version: 8.11.3
+  version: 8.11.4
   instanceName: gitlab
   repo1: rhdh2vm
   repo2: test
