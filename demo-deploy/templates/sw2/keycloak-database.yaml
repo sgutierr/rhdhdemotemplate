@@ -39,6 +39,9 @@ kind: Service
 metadata:
   name: postgres-db
   namespace: '{{ .Values.keycloak.namespaceName }}'  
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true  
 spec:
   selector:
     app: postgresql-db
