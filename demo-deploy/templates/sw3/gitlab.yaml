@@ -9,6 +9,14 @@ metadata:
 spec:
   chart:
     values:
+      webservice:
+        replicas: 1
+      sidekiq:
+        replicas: 1  
+      gitlab-shell:
+        replicas: 1
+      gitlab-registry:
+        replicas: 1        
       prometheus:
         alertmanager:
           enabled: false
