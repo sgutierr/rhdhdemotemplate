@@ -3,11 +3,13 @@ kind: StatefulSet
 metadata:
   name: '{{ .Values.keycloak.statefulSetName }}'
   namespace: '{{ .Values.keycloak.namespaceName }}'
+  labels:
+    app: postgres-db  
   annotations:
     argocd.argoproj.io/sync-wave: "2"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
-  serviceName: postgresql-db-service
+  serviceName: postgresql-db
   selector:
     matchLabels:
       app: postgresql-db
@@ -38,14 +40,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-db
-  namespace: '{{ .Values.keycloak.namespaceName }}'  
+  namespace: '{{ .Values.keycloak.namespaceName }}' 
+  labels:
+    app: postgres-db  
   annotations:
     argocd.argoproj.io/sync-wave: "2"
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true  
 spec:
   selector:
     app: postgresql-db
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 5432
     targetPort: 5432
