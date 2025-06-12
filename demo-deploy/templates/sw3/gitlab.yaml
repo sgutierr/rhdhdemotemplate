@@ -11,6 +11,8 @@ spec:
     values:
       webservice:
         replicas: 1
+        minReplicas: 1
+        maxReplicas: 1
       sidekiq:
         replicas: 1  
       gitlab-shell:
