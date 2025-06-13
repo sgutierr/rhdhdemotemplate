@@ -1,0 +1,121 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: quarkus-app-patch
+  title: Quarkus Application Patch Template
+  description: This is an example template to patch existing Quarkus components
+  tags:
+    - template
+    - quarkus
+    - patch
+    - book
+spec:
+  owner: rhdh-idp-book-authors
+  type: app-patch
+
+  parameters:
+    - title: Provide information about the component
+      required:
+        - gitlabGroup
+        - gitlabRepos
+      properties:
+        gitlabGroup:
+          title: GitLab repo owner
+          type: string
+          description: the group/owner of the existing GitLab repo
+          default: development
+          enum:
+            - development
+        gitlabRepos:
+          title: GitLab repo names
+          type: array
+          items:
+            type: string
+            title: repo name
+          description: the names of the existing GitLab repos to apply the patch on
+          default: ''
+        gitlabBranch:
+          title: GitLab Branch
+          type: string
+          description: the name of the source branch for the merge request
+          default: templated-app-patch
+    - title: Provide information about the patch
+      required:
+        - pomPath
+        - quarkusVersion
+        - containerFilePath
+        - baseImage
+      properties:
+        pomPath:
+          title: Path to pom.xml file
+          type: string
+          description: specify the relative path to the pom.xml file of the component
+          default: ./pom.xml
+        quarkusVersion:
+          title: Quarkus version
+          type: string
+          description: specify the desired version of Quarkus
+          default: '3.6.7'
+        containerFilePath:
+          title: Path to container file
+          type: string
+          description: specify the relative path to the container file of the component
+          default: ./Dockerfile
+        baseImage:
+          title: container base image
+          type: string
+          description: specify the desired container base image
+          default: 'ubi8/openjdk-17:1.18'
+
+  steps:
+    - id: fetch-repo
+      name: Fetch repo(s)
+      each: ${{ parameters.gitlabRepos }}
+      action: fetch:plain
+      input:
+        url: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{ parameters.gitlabGroup }}/${{ each.value }}
+        targetPath: ./${{ each.value }}
+    - id: patch-content
+      name: Patch repo(s)
+      each: ${{ parameters.gitlabRepos }}
+      action: roadiehq:utils:fs:replace
+      input:
+        files:
+          - file: ./${{ each.value }}/${{ parameters.pomPath }}
+            find: '3.4.2'
+            replaceWith: ${{ parameters.quarkusVersion }}
+          - file: ./${{ each.value }}/${{ parameters.containerFilePath }}
+            find: 'ubi8/openjdk-17:1.16'
+            replaceWith: ${{ parameters.baseImage }}
+          - file: ./${{ each.value }}/${{ parameters.pomPath }}
+            # NOTE:
+            # The following find & replace is an obvious hack and only shown here for demo purposes :)
+            # Ideally, there'd be more robust actions that would at least allow to find and replace by means of regex.
+            # Or better yet, actions that provide proper XML parsing options similar to other available
+            # functionalities to manipulate JSON or YAML file respectively.
+            find: "<dependency>\n      <groupId>io.quarkus</groupId>\n      <artifactId>quarkus-arc</artifactId>\n    </dependency>"
+            replaceWith: |
+              <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-arc</artifactId>
+              </dependency>
+              <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-smallrye-health</artifactId>
+              </dependency>
+    - id: open-mr
+      name: Open merge request(s)
+      each: ${{ parameters.gitlabRepos }}
+      action: publish:gitlab:merge-request
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?repo=${{ each.value }}&owner=${{ parameters.gitlabGroup }}
+        title: custom patches for quarkus component
+        description: custom patches for quarkus component
+        branchName: ${{ parameters.gitlabBranch }}
+        sourcePath: ./${{ each.value }}
+        commitAction: update
+    - id: log-mr
+      name: Links to merge request(s)
+      action: debug:log
+      input:
+        message: "find opened merge request(s) here"

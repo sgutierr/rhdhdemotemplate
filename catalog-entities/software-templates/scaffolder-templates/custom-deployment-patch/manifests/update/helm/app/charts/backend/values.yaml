@@ -1,0 +1,88 @@
+# Default values for nodejs-template.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+app:
+  componentId: ${{values.component_id}}
+  database:
+    host: ${{values.component_id}}
+    port: '5432'
+    user: nestjs
+    password: nestjs
+    catalog: pois?schema=public
+  applicationId: ${{values.application_id}}
+namespace:
+  enabled: true
+  argocd:
+    name: default
+
+replicaCount: 1
+
+image:
+  pullPolicy: Always
+  host: ${{values.image_host}}
+  repository: ${{values.image_repository}}
+  name: ${{values.image_name}}
+  # Overrides the image tag whose default is the chart appVersion.
+  # comes in via the argocd yaml definitions for -dev,-preprod,-prod
+  # tag: ${{values.image_tag}}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+  name: http
+
+route: 
+  #host: chart-example.local
+  path: /
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  # minReplicas: 1
+  # maxReplicas: 100
+  # targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

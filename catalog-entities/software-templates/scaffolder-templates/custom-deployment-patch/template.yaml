@@ -1,0 +1,123 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: staged-deployment-patch
+  title: Staged Deployment Patch Template
+  description: This is an example template to patch existing component manifests to a staged deployment
+  tags:
+    - template
+    - deployment
+    - patch
+    - book
+spec:
+  owner: rhdh-idp-book-authors
+  type: gitops-patch
+
+  parameters:
+    - title: Provide information about the component
+      required:
+        - gitlabGroup
+        - namespace
+        - applicationId
+      properties:
+        gitlabGroup:
+          title: GitLab repo owner
+          type: string
+          description: the group/owner of the existing GitLab repo
+          default: development
+          enum:
+            - development
+        namespace:
+          title: Namespace
+          type: string
+          description: the namespace of the component patch
+        applicationId:
+          title: Application Id
+          type: string
+          description: the application id of the component to patch
+        gitlabBranch:
+          title: GitLab Branch
+          type: string
+          description: the name of the source branch for the merge request
+          default: templated-gitops-patch
+
+  steps:
+    - id: generate-patch
+      name: Generate patch contents
+      action: fetch:template
+      input:
+        url: ./manifests
+        targetPath: ./patch-gitops
+        values:
+          git_host: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          component_id: ${{parameters.namespace}}-${{parameters.applicationId}}
+          description: ${{parameters.description}}
+          destination: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{ parameters.gitlabGroup }}/${{ parameters.namespace }}-${{ parameters.applicationId }}-gitops.git
+          source_repository: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.applicationId}}.git
+          repository_name: ${{parameters.namespace}}-${{parameters.applicationId}}-gitops
+          gitlabGroup: ${{parameters.gitlabGroup}}
+          git_owner: ${{parameters.gitlabGroup}}
+          cluster: .apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          namespace: ${{parameters.namespace}}
+          application_id: ${{parameters.applicationId}}
+          repoName: ${{parameters.namespace}}-${{parameters.applicationId}}
+          owner: ${{parameters.owner}}
+          cluster_id: .apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          image_host: 'image-registry.openshift-image-registry.svc:5000'
+          image_repository: ${{parameters.namespace}}
+          image_name: ${{parameters.applicationId}}
+          image_tag: 'latest'
+    - id: open-mr-1
+      name: Open merge request 1
+      action: publish:gitlab:merge-request
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?repo=${{ parameters.namespace }}-${{ parameters.applicationId }}-gitops&owner=${{ parameters.gitlabGroup }}
+        title: new files for staged deployment
+        description: custom templated gitops patch
+        branchName: ${{ parameters.gitlabBranch }}-create
+        targetBranchName: main
+        sourcePath: ./patch-gitops/create
+        targetPath: ./
+        commitAction: create
+    - id: log-mr-1
+      name: Link to merge request 1
+      action: debug:log
+      input:
+        message: "find opened merge request here"
+        extra: ${{ steps["open-mr-1"].output.mergeRequestUrl }}
+    - id: open-mr-2
+      name: Open merge request 2
+      action: publish:gitlab:merge-request
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?repo=${{ parameters.namespace }}-${{ parameters.applicationId }}-gitops&owner=${{ parameters.gitlabGroup }}
+        title: updated files for staged deployment
+        description: custom templated gitops patch
+        branchName: ${{ parameters.gitlabBranch }}-update
+        targetBranchName: main
+        sourcePath: ./patch-gitops/update
+        targetPath: ./
+        commitAction: update
+    - id: log-mr-2
+      name: Link to merge request 2
+      action: debug:log
+      input:
+        message: "find opened merge request here"
+        extra: ${{ steps["open-mr-2"].output.mergeRequestUrl }}
+    - id: open-mr-3
+      name: Open merge request 3
+      action: publish:gitlab:merge-request
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?repo=${{ parameters.namespace }}-${{ parameters.applicationId }}-gitops&owner=${{ parameters.gitlabGroup }}
+        title: deleted files for staged deployment
+        description: custom templated gitops patch
+        branchName: ${{ parameters.gitlabBranch }}-delete
+        targetBranchName: main
+        sourcePath: ./patch-gitops/delete
+        targetPath: ./
+        commitAction: delete
+    - id: log-mr-3
+      name: Link to merge request 3
+      action: debug:log
+      input:
+        message: "find opened merge request here"
+        extra: ${{ steps["open-mr-3"].output.mergeRequestUrl }}

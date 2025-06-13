@@ -1,0 +1,162 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: quarkus-with-angular
+  title: Quarkus Service with hosted Angular Frontend
+  description: Creates a Quarkus service hosting an Angular frontend
+  tags:
+    - java
+    - quarkus
+    - quinoa
+    - angular
+    - book
+spec:
+  owner: rhdh-idp-book-authors
+  type: service
+
+  parameters:
+    - title: Provide information about the GitLab location
+      required:
+        - gitlabGroup
+      properties:
+        gitlabGroup:
+          title: Repo Owner
+          type: string
+          description: GitLab Organization
+          default: development
+          enum:
+            - development
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+          default: Creates a Quarkus service hosting an Angular frontend
+    - title: Provide information about the new component
+      required:
+        - namespace
+        - application_id
+        - owner
+      properties:
+        namespace: 
+          title: Namespace
+          type: string
+          description: Namespace
+        application_id: 
+          title: Application Id
+          type: string
+          description: Id of the application
+          default: poi-map
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind: [User]
+    - title: Provide Build Information
+      required:
+        - image_host
+        - image_tag
+      properties:
+        image_host:
+          title: Image Host
+          type: string
+          description: Host for storing image (defaults to openshift internal)
+          default: image-registry.openshift-image-registry.svc:5000
+        image_tag:
+          title: Image Tag
+          default: latest
+          type: string
+          description: Image tag to use for storing in the internal registry
+  steps:
+    - id: templateSource
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./source
+        values:
+          git_host: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          gitlabGroup: ${{parameters.gitlabGroup}}
+          repoName: ${{parameters.namespace}}-${{parameters.application_id}}
+          owner: ${{parameters.owner}}
+          cluster_id: .apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          namespace: ${{parameters.namespace}}
+          component_id: ${{parameters.namespace}}-${{parameters.application_id}}
+          description: ${{parameters.description}}
+    - id: publishSource
+      name: Publishing to Source Code Repository
+      action: publish:gitlab
+      input:
+        sourcePath: ./source
+        description: ${{parameters.description}}
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?owner=${{parameters.gitlabGroup}}&repo=${{parameters.namespace}}-${{parameters.application_id}}
+        defaultBranch: main
+        protectDefaultBranch: false
+        repoVisibility: public
+    - id: templateGitops
+      name: Generating the deployment resources and artefacts
+      action: fetch:template
+      input:
+        url: ./manifests
+        copyWithoutTemplating: []
+        values:
+          git_host: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          component_id: ${{parameters.namespace}}-${{parameters.application_id}}
+          description: ${{parameters.description}}
+          destination: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}-gitops.git
+          source_repository: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}.git
+          repository_name: ${{parameters.namespace}}-${{parameters.application_id}}
+          git_owner: ${{parameters.gitlabGroup}}
+          cluster: .apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          namespace: ${{parameters.namespace}}
+          image_host: ${{parameters.image_host}}
+          image_name: ${{parameters.namespace}}/${{parameters.application_id}}
+          image_tag: ${{parameters.image_tag}}
+          application_id: ${{parameters.application_id}}
+        targetPath: ./tenant-gitops
+    - id: publishGitops
+      name: Publishing to Deployment Resource Repository
+      action: publish:gitlab
+      input:
+        repoUrl: gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com?owner=${{parameters.gitlabGroup}}&repo=${{parameters.namespace}}-${{parameters.application_id}}-gitops
+        title: gitops resources for ${{parameters.namespace}}-${{parameters.application_id}}
+        description: gitops resources for ${{parameters.namespace}}-${{parameters.application_id}}
+        sourcePath: ./tenant-gitops
+        defaultBranch: main
+        protectDefaultBranch: false
+        repoVisibility: public
+    - id: registerSource1
+      name: Register Quarkus Service Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
+        catalogInfoPath: /catalog-info.yaml
+    - id: registerSource2
+      name: Register Angular Frontend Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{steps.publishSource.output.repoContentsUrl}}
+        catalogInfoPath: /src/main/angular/catalog-info.yaml
+    - id: createArgoResources
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{parameters.namespace}}-${{parameters.application_id}}-bootstrap
+        argoInstance: main
+        namespace: janus-argocd
+        repoUrl: https://gitlab-gitlab.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}-gitops.git
+        path: 'argocd/'
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{steps.publishSource.output.remoteUrl}}
+      - title: Pipeline status
+        url: https://console-openshift-console.apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com/dev-pipelines/ns/${{parameters.namespace}}/
+      - title: Open Quarkus Service Component
+        icon: catalog
+        entityRef: ${{steps.registerSource1.output.entityRef}}
+      - title: Open Angular Frontend Component
+        icon: catalog
+        entityRef: ${{steps.registerSource2.output.entityRef}}

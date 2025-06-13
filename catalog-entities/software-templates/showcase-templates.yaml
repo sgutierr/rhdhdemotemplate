@@ -6,4 +6,9 @@ metadata:
 spec:
   type: url
   targets:
-     - https://gitlab.apps.cluster-hprzc.hprzc.gcp.redhatworkshops.io/development/rhdh2vm/blob/main/catalog-entities/software-templates/scaffolder-templates/jboss-eap-vm-template/template.yaml
+     - ./scaffolder-templates/jboss-eap-vm-template/template.yaml
+     - ./scaffolder-templates/jboss-eap-vm-template/nestjs-with-postgres/template.yaml
+     - ./scaffolder-templates/jboss-eap-vm-template/quarkus-with-angular/template.yaml
+     - ./scaffolder-templates/jboss-eap-vm-template/custom-component-patch/template.yaml
+     - ./scaffolder-templates/jboss-eap-vm-template/custom-deployment-patch/template.yaml  
+

@@ -1,0 +1,18 @@
+stages:
+  - build
+
+build-job:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - 'docs/**/*'
+        - 'mkdocs.yaml'
+  variables:
+    ENTITY_NAMESPACE: 'default'
+    ENTITY_KIND: 'Component'
+    ENTITY_NAME: ${{values.component_id}}-service
+  image: quay.io/redhat-gpte/techdocs-cli
+  stage: build
+  script:
+  - techdocs-cli generate --no-docker --verbose
+  - techdocs-cli publish --publisher-type awsS3 --storage-name $TECHDOCS_S3_BUCKET_NAME --awsEndpoint $AWS_ENDPOINT --awsS3ForcePathStyle --entity $ENTITY_NAMESPACE/$ENTITY_KIND/$ENTITY_NAME

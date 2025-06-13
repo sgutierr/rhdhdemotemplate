@@ -1,0 +1,15 @@
+# postgres setting for bitnami chart and openshift deployment
+postgresql:
+  auth:
+      username: nestjs
+      password: nestjs
+      database: pois
+  primary:
+    podSecurityContext:
+      enabled: false
+    persistence:
+      enabled: false
+    containerSecurityContext:
+      enabled: false
+    labels:
+      app.kubernetes.io/part-of: idp-book-example

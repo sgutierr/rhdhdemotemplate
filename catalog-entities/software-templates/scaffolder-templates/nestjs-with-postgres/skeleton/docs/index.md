@@ -1,0 +1,3 @@
+# ${{values.component_id}} Component Documentation
+
+TODO: write your component's documentation here...

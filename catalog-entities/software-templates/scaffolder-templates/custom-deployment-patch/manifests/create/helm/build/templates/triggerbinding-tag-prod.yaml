@@ -1,0 +1,16 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tag-binding-prod
+spec:
+  params:
+    - name: source-tag
+      value: $(body.tag)
+    - name: source-image
+      value: {{ include "image.preprod-url" . }}
+    - name: destination-image
+      value: {{ include "image.prod-url" . }}
+    - name: destination-tag
+      value: prod-$(body.tag)
+    - name: namespace
+      value: {{ .Values.image.repository }}-prod
