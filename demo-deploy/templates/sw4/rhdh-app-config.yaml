@@ -80,6 +80,11 @@ data:
           - Template
           - Group
           - User
+          - Component
+          - System
+          - API
+          - Resource
+          - Location
         target: https://github.com/sgutierr/rhdhdemotemplate/blob/main/catalog-entities/all.yaml
         type: url
       providers:  
