@@ -6,7 +6,7 @@ metadata:
 spec:
   targets:
     - ./software-templates/scaffolder-templates/jboss-eap-vm-template/template.yaml
-    - ./software-templates/scaffolder-templates/jboss-eap-vm-template/nestjs-with-postgres/template.yaml
-    - ./software-templates/scaffolder-templates/jboss-eap-vm-template/quarkus-with-angular/template.yaml
-    - ./software-templates/scaffolder-templates/jboss-eap-vm-template/custom-component-patch/template.yaml
-    - ./software-templates/scaffolder-templates/jboss-eap-vm-template/custom-deployment-patch/template.yaml  
+    - ./software-templates/scaffolder-templates/nestjs-with-postgres/template.yaml
+    - ./software-templates/scaffolder-templates/template.yaml
+    - ./software-templates/scaffolder-templates/custom-component-patch/template.yaml
+    - ./software-templates/scaffolder-templates/custom-deployment-patch/template.yaml  
