@@ -22,3 +22,16 @@ spec:
     email: user1gr@example.com
   parent: development
   children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: rhdh-idp-book-authors
+  description: rhdh-idp-book-authors group
+spec:
+  type: team
+  profile:
+    # Intentional no displayName for testing
+    email: rhdh-idp-book-authors@example.com
+  parent: development
+  children: []
