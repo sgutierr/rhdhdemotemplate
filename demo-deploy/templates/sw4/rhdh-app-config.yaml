@@ -10,6 +10,12 @@ data:
   my-app-config.yaml: |
     app:
       baseUrl: ${BACKSTAGE_URL}
+      analytics:
+        adoptionInsights:
+          maxBufferSize: 20 
+          flushInterval: 5000 
+          debug: false 
+          licensedUsers: 2000       
     argocd:
       appLocatorMethods:
       - instances:
