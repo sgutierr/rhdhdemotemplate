@@ -7,3 +7,13 @@ spec:
     displayName: User1
     email: user1@example.com 
   memberOf: [user1]  
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: sgutierr
+spec:
+  profile:
+    displayName: Sergio
+    email: sgutierr@example.com 
+  memberOf: [user1]  
