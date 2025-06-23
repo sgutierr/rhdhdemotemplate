@@ -36,7 +36,7 @@ spec:
           title: Gitlab URL
           type: string
           description: GitLab URL
-          default: quitala
+          default: https://gitlab.apps.ocp4.quitala.eu
           enum:
             - https://gitlab.apps.ocp4.quitala.eu
         description:
