@@ -39,11 +39,6 @@ spec:
           default: https://gitlab.apps.ocp4.quitala.eu
           enum:
             - https://gitlab.apps.ocp4.quitala.eu
-        description:
-          title: Description
-          type: string
-          description: Help others understand what this component is for
-          default: Creates a Quarkus service hosting an Angular frontend          
     - title: Provide information about the new component
       required:
         - namespace
