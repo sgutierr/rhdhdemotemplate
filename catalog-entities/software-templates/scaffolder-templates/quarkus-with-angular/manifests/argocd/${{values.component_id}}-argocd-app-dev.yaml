@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ${{values.component_id}}-dev
-  namespace: janus-argocd
+  namespace: openshift-gitops
   labels:
     argocd/app-name: ${{values.component_id}}-dev
   annotations:
@@ -13,7 +13,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: ${{values.destination}}
+    repoURL: https://${{values.destination}}
     targetRevision: HEAD
     path: ./helm/app
   destination:
