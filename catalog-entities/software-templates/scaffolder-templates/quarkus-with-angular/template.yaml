@@ -36,9 +36,9 @@ spec:
           title: Gitlab URL
           type: string
           description: GitLab URL
-          default: https://gitlab.apps.ocp4.quitala.eu
+          default: gitlab.apps.ocp4.quitala.eu
           enum:
-            - https://gitlab.apps.ocp4.quitala.eu
+            - gitlab.apps.ocp4.quitala.eu
     - title: Provide information about the new component
       required:
         - namespace
