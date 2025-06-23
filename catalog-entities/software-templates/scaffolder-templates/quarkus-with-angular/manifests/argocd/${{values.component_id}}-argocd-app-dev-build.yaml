@@ -3,13 +3,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ${{values.component_id}}-dev-build
-  namespace: janus-argocd
+  namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io  
 spec:
   project: default
   source:
-    repoURL: ${{values.destination}}
+    repoURL: https://${{values.destination}}
     targetRevision: HEAD
     path: ./helm/build
   destination:
