@@ -117,7 +117,7 @@ spec:
           source_repository: ${{parameters.gitlabURL}}/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}.git
           repository_name: ${{parameters.namespace}}-${{parameters.application_id}}
           git_owner: ${{parameters.gitlabGroup}}
-          cluster: .apps.cluster-sfhkg.sfhkg.sandbox647.opentlc.com
+          cluster: .apps.ocp4.quitala.eu
           namespace: ${{parameters.namespace}}
           image_host: ${{parameters.image_host}}
           image_name: ${{parameters.namespace}}/${{parameters.application_id}}
