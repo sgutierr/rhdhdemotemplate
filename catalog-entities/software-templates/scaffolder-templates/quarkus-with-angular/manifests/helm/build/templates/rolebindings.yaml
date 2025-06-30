@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: allow-eso-k8s-reader
-  namespace: gitlab-system
+  namespace: {{ .Values.developerhub.namespaceName }}
 subjects:
   - kind: ServiceAccount
     name: pipeline
