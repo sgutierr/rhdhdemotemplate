@@ -7,8 +7,8 @@ spec:
   type: url
   targets:
      - ./scaffolder-templates/jboss-eap-vm-template/template.yaml
-     - ./scaffolder-templates/jboss-eap-vm-template/nestjs-with-postgres/template.yaml
-     - ./scaffolder-templates/jboss-eap-vm-template/quarkus-with-angular/template.yaml
-     - ./scaffolder-templates/jboss-eap-vm-template/custom-component-patch/template.yaml
-     - ./scaffolder-templates/jboss-eap-vm-template/custom-deployment-patch/template.yaml  
+     - ./scaffolder-templates/nestjs-with-postgres/template.yaml
+     - ./scaffolder-templates/quarkus-with-angular/template.yaml
+     - ./scaffolder-templates/custom-component-patch/template.yaml
+     - ./scaffolder-templates/custom-deployment-patch/template.yaml  
 
