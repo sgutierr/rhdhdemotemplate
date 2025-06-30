@@ -12,6 +12,8 @@ spec:
       parameters:
         - name: cluster.domain
           value: <here-goes-your-openshift-cluster-domain>
+        - name: github.pat
+          value: <here-goes-your-github-personal-access-token(PAT)>
     path: demo-deploy
     repoURL: 'https://github.com/sgutierr/rhdhdemotemplate.git'
     targetRevision: HEAD
