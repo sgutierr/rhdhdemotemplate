@@ -26,9 +26,11 @@ gitlab:
   repo2: test
   organizationName: development
   user1Password: redhat1!
+  webhookSecret: vkkkmzkwydsa
 github:
   pat: fill-with-your-pat
   repo1: https://github.com/sgutierr/rhdhdemotemplate.git
+  repo2: https://github.com/sgutierr/rhdhdemotemplate
 tekton:
   subscriptionName: openshift-pipelines-operator
 keycloak:
