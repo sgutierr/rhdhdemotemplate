@@ -153,8 +153,8 @@ spec:
       input:
         appName: ${{parameters.namespace}}-${{parameters.application_id}}-bootstrap
         argoInstance: main
-        namespace: janus-argocd
-        repoUrl: ${{parameters.gitlabURL}}/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}-gitops.git
+        namespace: openshift-gitops
+        repoUrl: https://${{parameters.gitlabURL}}/${{parameters.gitlabGroup}}/${{parameters.namespace}}-${{parameters.application_id}}-gitops.git
         path: 'argocd/'
   output:
     links:
