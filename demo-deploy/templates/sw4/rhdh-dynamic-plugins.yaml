@@ -163,8 +163,7 @@ data:
                       icon: manageAccounts
                 - mountPoint: global.header/profile
                   importName: LogoutButton
-                  config:
-                    priority: 10       
+                    priority: 10   
     - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
       disabled: true
     - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-adoption-insights:bs_1.35.1__0.0.3!red-hat-developer-hub-backstage-plugin-adoption-insights
