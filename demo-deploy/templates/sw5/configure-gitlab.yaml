@@ -62,7 +62,7 @@ spec:
               echo "GitLab authentication successful. Token-> $GITLAB_TOKEN"
 
               # Set GitLab Token secret for future webhooks configurations
-              oc create secret generic root-user-personal-token 
+              oc create secret generic root-user-personal-token \
                 --from-literal=token=$GITLAB_TOKEN -n gitlab-system \
                 --dry-run=client -o yaml | oc apply -f -
               
