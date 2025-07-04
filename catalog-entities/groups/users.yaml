@@ -21,9 +21,9 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: guess
+  name: guest
 spec:
   profile:
-    displayName: Guess
-    email: guess@example.com 
+    displayName: Guest
+    email: guest@example.com 
   memberOf: []  
