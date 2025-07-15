@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: allow-eso-k8s-reader
-  namespace: {{ .Values.developerhub.namespaceName }}
+  namespace: {{ .Values.app.namespace }}
 subjects:
   - kind: ServiceAccount
     name: pipeline
@@ -16,13 +16,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: system:image-pullers
-  namespace: {{ .Values.developerhub.namespaceName }}
+  namespace: {{ .Values.app.namespace }}
   annotations:
     openshift.io/description: Allows all pods in this namespace to pull images from this namespace.  It is auto-managed by a controller; remove subjects to disable.
 subjects:
   - kind: Group
     apiGroup: rbac.authorization.k8s.io
-    name: system:serviceaccounts:{{ .Values.developerhub.namespaceName }}
+    name: system:serviceaccounts:{{ .Values.app.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -33,13 +33,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: system:image-builders
-  namespace: {{ .Values.developerhub.namespaceName }}
+  namespace: {{ .Values.app.namespace }}
   annotations:
     openshift.io/description: Allows builds in this namespace to push images to this namespace.  It is auto-managed by a controller; remove subjects to disable.
 subjects:
   - kind: ServiceAccount
     name: builder
-    namespace: {{ .Values.developerhub.namespaceName }}
+    namespace: {{ .Values.app.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -50,11 +50,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pipelines-scc-rolebinding
-  namespace: {{ .Values.developerhub.namespaceName }}
+  namespace: {{ .Values.app.namespace }}
 subjects:
   - kind: ServiceAccount
     name: pipeline
-    namespace: {{ .Values.developerhub.namespaceName }}
+    namespace: {{ .Values.app.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -64,13 +64,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: 'system:deployers'
-  namespace: {{ .Values.developerhub.namespaceName }}
+  namespace: {{ .Values.app.namespace }}
   annotations:
     openshift.io/description: Allows deploymentconfigs in this namespace to rollout pods in this namespace.  It is auto-managed by a controller; remove subjects to disable.
 subjects:
   - kind: ServiceAccount
     name: deployer
-    namespace: {{ .Values.developerhub.namespaceName }}
+    namespace: {{ .Values.app.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -83,13 +83,13 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pipeline-registry-editor
-  namespace:  {{ .Values.developerhub.namespaceName }}
+  namespace:  {{ .Values.app.namespace }}
   annotations:
     openshift.io/description: Allows deploymentconfigs in this namespace to rollout pods in this namespace.  It is auto-managed by a controller; remove subjects to disable.
 subjects:
   - kind: ServiceAccount
     name: pipeline
-    namespace:  {{ .Values.developerhub.namespaceName }}
+    namespace:  {{ .Values.app.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
