@@ -17,9 +17,9 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.app.name }}-
+        generateName: {{ .Values.app.name }}-pipeline-run
         labels:
-          backstage.io/kubernetes-id: ${{values.component_id}}
+          backstage.io/kubernetes-id: {{ .Values.app.name }}
       spec:
         params:
           - name: source-repo
@@ -34,12 +34,10 @@ spec:
         timeout: 1h0m0s
         workspaces:
           - name: source-folder
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
-          - emptyDir: {}
-            name: maven-settings
+            subPath: source
+            persistentVolumeClaim:
+              claimName: {{ .Values.app.name }}-pvc1
+          - name: maven_settings
+            subPath: maven-repo-cache
+            persistentVolumeClaim:
+              claimName: {{ .Values.app.name }}-pvc2    

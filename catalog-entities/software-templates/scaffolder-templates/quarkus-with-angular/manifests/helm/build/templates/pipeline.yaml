@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.app.name }}-pipeline
   labels:
     type: pipeline
-    backstage.io/kubernetes-id: ${{values.component_id}}
+    backstage.io/kubernetes-id: {{ .Values.app.name }}
 spec:
   params:
     - name: source-repo
@@ -31,13 +31,19 @@ spec:
   tasks:
     - name: git-clone
       params:
-        - name: url
+        - name: URL
           value: $(params.source-repo)
-        - name: revision
+        - name: REVISION
           value: $(params.source-branch)
       taskRef:
-        kind: ClusterTask
-        name: git-clone
+        resolver: cluster
+        params:
+        - name: kind
+          value: task
+        - name: name
+          value: git-clone
+        - name: namespace
+          value: openshift-pipelines
       workspaces:
         - name: output
           workspace: source-folder
@@ -45,25 +51,56 @@ spec:
       runAfter:
         - git-clone
       taskRef:
-        kind: ClusterTask
-        name: maven
+        resolver: cluster
+        params:
+        - name: kind
+          value: task
+        - name: name
+          value: maven
+        - name: namespace
+          value: openshift-pipelines
+      params:
+        - name: GOALS
+          value:
+            - -Dmaven.repo.local=$(workspaces.maven_settings.path)
+            - verify
       workspaces:
         - name: source
           workspace: source-folder
-        - name: maven-settings
-          workspace: maven-settings
+        - name: maven_settings
+          workspace: maven_settings
     - name: build-and-push
       params:
         - name: IMAGE
           value: $(params.output-image)
+        - name: BUILDER_IMAGE
+          value: quay.io/buildah/stable:v1.17.0
+        - name: STORAGE_DRIVER
+          value: vfs
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: .
+        - name: TLSVERIFY
+          value: 'false'
+        - name: FORMAT
+          value: oci
+        - name: BUILD_EXTRA_ARGS
+          value: '--debug'
+        - name: IMAGE_ORIGIN
+          value: localhost
+        - name: IMAGE_TARGET
+          value: $(params.output-image)
+        - name: PUSH_EXTRA_ARGS
+          value: '--debug'          
       runAfter:
         - package
       taskRef:
-        kind: Task
-        name: kaniko-{{ .Values.app.name }}
+        kind: Task  
+        name: buildah-custom-task
       workspaces:
         - name: source
-          workspace: source-folder
+          workspace: source-folder    
     - name: resync
       params:
         - name: COMPONENT_ID
@@ -77,4 +114,4 @@ spec:
         name: resync-{{ .Values.app.name }}
   workspaces:
     - name: source-folder
-    - name: maven-settings
+    - name: maven_settings
